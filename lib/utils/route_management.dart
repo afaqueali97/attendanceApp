@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:rename_me/ui/screens/attendance_app_screens/delete_user_screen.dart';
+import 'package:rename_me/ui/screens/attendance_app_screens/view_attendance_records_screen.dart';
 import 'package:rename_me/ui/screens/attendance_app_screens/face_scanning_screen.dart';
 import 'package:rename_me/ui/screens/attendance_app_screens/register_new_user_screen.dart';
 import 'package:rename_me/ui/screens/attendance_app_screens/view_registered_users_screen.dart';
@@ -54,8 +54,8 @@ class RouteManagement {
           page: () => const ViewRegisteredUsersScreen(),
           binding: ScreensBindings()),
       GetPage(
-        name: kDeleteUserScreenRoute,
-        page: () => const DeleteUserScreen(),
+        name: kViewAttendanceRecordsScreenRoute,
+        page: () => const ViewAttendanceRecordsScreen(),
         binding: ScreensBindings(),
       )
     ];

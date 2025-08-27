@@ -17,8 +17,8 @@ class DashboardScreenController extends GetxController{
       case "View Registered Users":
         Get.toNamed(kViewRegisteredUsersScreenRoute);
         break;
-      case "Delete user":
-        Get.toNamed(kDeleteUserScreenRoute);
+      case "View Attendance Records":
+        Get.toNamed(kViewAttendanceRecordsScreenRoute);
         break;
 
 

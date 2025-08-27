@@ -295,7 +295,7 @@ class FaceScanningScreenController extends GetxController {
       // final attendanceBox = Hive.box<String>('attendance_db');
 
       if (attendanceBox.containsKey(todayKey)) {
-        CommonCode().showToast(message: "Attendance already marked today");
+        CommonCode().showToast(message: "${name.toUpperCase()}'s Attendance already marked today");
         Get.back();
         debugPrint('Attendance already marked for $name today');
         return;

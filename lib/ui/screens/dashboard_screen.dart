@@ -66,7 +66,7 @@ Widget  _buildBody() {
                       _dashboardCard(title: "Register User",iconPath: 'assets/icons/dashboard_icons/add_user_icon.png'),
                       _dashboardCard(title: "Mark Attendance",iconPath: 'assets/icons/dashboard_icons/face_scan_icon.png'),
                       _dashboardCard(title: "View Registered Users",iconPath: 'assets/icons/dashboard_icons/list_icon.png'),
-                      // _dashboardCard(title: "Delete user",iconPath: 'assets/icons/dashboard_icons/remove_user_icon.png'),
+                      _dashboardCard(title: "View Attendance Records",iconPath: 'assets/icons/dashboard_icons/attendance_records.png'),
                     ],
                   ),
                 ),

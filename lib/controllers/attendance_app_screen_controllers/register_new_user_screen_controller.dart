@@ -23,7 +23,8 @@ class RegisterNewUserScreenController extends GetxController {
   // Face detection variables
   final RxBool _isDetecting = false.obs;
   Timer? _faceDetectionTimer;
-  bool _isCaptureInProgress = false; // Add this flag
+  bool _isCaptureInProgress = false;
+  bool isTakePictureInProgress = false; // NEW: Track takePicture state
 
   @override
   void onInit() {
@@ -67,22 +68,26 @@ class RegisterNewUserScreenController extends GetxController {
   }
 
   void _startFaceDetection() {
-    _faceDetectionTimer = Timer.periodic(const Duration(milliseconds: 200), (_) {
-      if (!_isDetecting.value && isCameraInitialized.value && !_isCaptureInProgress) {
+    _faceDetectionTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
+      if (!_isDetecting.value &&
+          isCameraInitialized.value &&
+          !_isCaptureInProgress &&
+          !isTakePictureInProgress) { // NEW: Check takePicture state
         _processCameraFrame();
       }
     });
   }
 
   Future<void> _processCameraFrame() async {
-    if (_isDetecting.value) return;
+    if (_isDetecting.value || isTakePictureInProgress) return; // NEW: Check takePicture state
     _isDetecting.value = true;
 
     try {
-      final frame = await cameraController.takePicture();
-      final bytes = await frame.readAsBytes();
-      final inputImage = InputImage.fromFilePath(frame.path);
+      // Use tryTakePicture instead of takePicture to avoid conflicts
+      final frame = await _safeTakePicture();
+      if (frame == null) return;
 
+      final inputImage = InputImage.fromFilePath(frame.path);
       final faces = await faceDetector.processImage(inputImage);
       faceDetected.value = faces.isNotEmpty;
 
@@ -95,13 +100,28 @@ class RegisterNewUserScreenController extends GetxController {
     }
   }
 
+  // NEW: Safe method to take pictures without conflicts
+  Future<XFile?> _safeTakePicture() async {
+    if (isTakePictureInProgress) return null;
+
+    isTakePictureInProgress = true;
+    try {
+      return await cameraController.takePicture();
+    } catch (e) {
+      debugPrint("Safe takePicture error: $e");
+      return null;
+    } finally {
+      isTakePictureInProgress = false;
+    }
+  }
+
   Future<void> captureFace() async {
     if (!faceDetected.value) {
       CommonCode().showToast(message: "No face detected");
       return;
     }
 
-    if (_isCaptureInProgress) {
+    if (_isCaptureInProgress || isTakePictureInProgress) {
       CommonCode().showToast(message: "Capture already in progress");
       return;
     }
@@ -113,34 +133,44 @@ class RegisterNewUserScreenController extends GetxController {
       // Stop face detection during capture
       _faceDetectionTimer?.cancel();
 
-      final frame = await cameraController.takePicture();
-      final bytes = await frame.readAsBytes();
+      // Use safe method to take picture
+      final frame = await _safeTakePicture();
+      if (frame == null) {
+        throw Exception("Failed to capture image");
+      }
 
-      // Process and optimize the image
+      final bytes = await frame.readAsBytes();
       final processedImage = await _processCapturedImage(bytes);
       capturedFace.value = processedImage;
 
       // Delete the temporary file
       await File(frame.path).delete();
     } catch (e) {
-      CommonCode().showToast(message: "Error capturing face: $e");
-      debugPrint("Face capture error: $e");
+      debugPrint('Capture face exception: ${e.toString()}');
+      CommonCode().showToast(message: "Error capturing face: ${e.toString()}");
     } finally {
       isProcessing.value = false;
       _isCaptureInProgress = false;
 
-      // Restart face detection
-      _startFaceDetection();
+      // Restart face detection with delay to ensure camera is ready
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _startFaceDetection();
+      });
     }
   }
 
   Future<Uint8List> _processCapturedImage(Uint8List imageBytes) async {
-    final image = img.decodeImage(imageBytes);
-    if (image == null) return imageBytes;
+    try {
+      final image = img.decodeImage(imageBytes);
+      if (image == null) return imageBytes;
 
-    var processedImage = img.copyRotate(image, 270);
-    processedImage = img.flipHorizontal(processedImage);
-    return Uint8List.fromList(img.encodeJpg(processedImage, quality: 80));
+      var processedImage = img.copyRotate(image, 270);
+      processedImage = img.flipHorizontal(processedImage);
+      return Uint8List.fromList(img.encodeJpg(processedImage, quality: 80));
+    } catch (e) {
+      debugPrint("Image processing error: $e");
+      return imageBytes; // Return original if processing fails
+    }
   }
 
   Future<void> saveUser() async {
@@ -158,6 +188,13 @@ class RegisterNewUserScreenController extends GetxController {
 
     try {
       final box = Hive.box('face_db');
+
+      // Check if user already exists
+      if (box.containsKey(nameController.text)) {
+        CommonCode().showToast(message: "User already exists");
+        return;
+      }
+
       await box.put(nameController.text, capturedFace.value);
 
       CommonCode().showToast(

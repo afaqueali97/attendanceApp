@@ -92,21 +92,25 @@ class RegisterNewUserScreen extends GetView<RegisterNewUserScreenController> {
                       ),
 
                     // Capture Button
+                    // In your captureFace() method, add visual feedback:
                     Obx(() => ElevatedButton(
-                      onPressed: controller.isProcessing.value
+                      onPressed: controller.isProcessing.value ||
+                          controller.isTakePictureInProgress // Add this condition
                           ? null
                           : controller.captureFace,
                       style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
                         padding: const EdgeInsets.all(20),
+                        backgroundColor: controller.isTakePictureInProgress // Visual feedback
+                            ? kGreyColor
+                            : kBlackColor,
                       ),
                       child: controller.isProcessing.value
                           ? const CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation(kWhiteColor),
                       )
-                          : const Icon(Icons.camera_alt, size: 36,color: kPrimaryColor,),
-                    ),
-                    ),
+                          : const Icon(Icons.camera_alt, size: 36,color: kWhiteColor,),
+                    ),),
                   ],
                 ),
               ),

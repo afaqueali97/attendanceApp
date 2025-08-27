@@ -28,7 +28,7 @@ const String kEligibilityQuestionsRoute = "/ELIGIBILITY_QUESTIONS_SCREEN";
 const String kScanFaceScreenRoute = "/SCAN_FACE_SCREEN";
 const String kRegisterUserScreenRoute  = "/REGISTER_USER_SCREEN_ROUTE";
 const String kViewRegisteredUsersScreenRoute  = "/VIEW_REGISTERED_USERS_SCREEN_ROUTE";
-const String kDeleteUserScreenRoute  = "/DELETE_USER_SCREEN_ROUTE";
+const String kViewAttendanceRecordsScreenRoute  = "/VIEW_ATTENDANCE_RECORDS_SCREEN_ROUTE";
 
 
 const String kSyncScreenRoute = "/SYNC_SCREEN";

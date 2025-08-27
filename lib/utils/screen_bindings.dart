@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:rename_me/controllers/attendance_app_screen_controllers/delete_user_screen_controller.dart';
+import 'package:rename_me/controllers/attendance_app_screen_controllers/view_attendance_records_screen_controller.dart';
 import 'package:rename_me/controllers/attendance_app_screen_controllers/face_scanning_screen_controller.dart';
 import 'package:rename_me/controllers/attendance_app_screen_controllers/register_new_user_screen_controller.dart';
 import 'package:rename_me/controllers/attendance_app_screen_controllers/view_registered_users_screen_controller.dart';
@@ -22,7 +22,7 @@ class ScreensBindings extends Bindings {
     Get.lazyPut(() => SettingScreenController());
     // Get.lazyPut(() => ScanFaceScreenController());
     Get.lazyPut(() => FaceScanningScreenController());
-    Get.lazyPut(() => DeleteUserScreenController());
+    Get.lazyPut(() => ViewAttendanceRecordsScreenController());
     Get.lazyPut(() => RegisterNewUserScreenController());
     Get.lazyPut(() => ViewRegisteredUsersScreenController());
   }
