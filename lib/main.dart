@@ -1,9 +1,12 @@
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rename_me/services/firebase_services/firebase_storage_service.dart';
+import 'package:rename_me/services/firebase_services/firestore_service.dart';
 import 'utils/app_colors.dart';
 import 'utils/constants.dart';
 import 'utils/route_management.dart';
@@ -39,6 +42,19 @@ void main() async {
     ),
   );
   WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyCcUuKX5o77jnHRPahrlqtfbRPbiXK6Tng",
+      appId: "1:678144749729:android:7600c6bc3fb3919bcc00e0",
+      messagingSenderId: "your-messaging-sender-id",
+      projectId: "face-attendance-bf0c4",
+    ),
+  );
+  // Put services into dependency injection
+  Get.put(FirebaseStorageService());
+  Get.put(FirestoreService());
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,

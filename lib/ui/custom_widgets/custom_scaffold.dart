@@ -22,6 +22,7 @@ class CustomScaffold extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
   final double appBarHeight;
   final PreferredSize? bottomSheet;
+  final Widget? floatingActionButton;
 
 
   const CustomScaffold({super.key,
@@ -40,6 +41,7 @@ class CustomScaffold extends StatefulWidget {
     this.horizontalPadding=20,
     this.appBarHeight = 80,
     this.bottomSheet,
+    this.floatingActionButton,
   });
 
   @override
@@ -127,13 +129,13 @@ class _CustomScaffoldState extends State<CustomScaffold> {
                   ),
                 ),
               ),
-              floatingActionButton: widget.onAddPressed == null ? null : FloatingActionButton(
+              floatingActionButton: widget.floatingActionButton ?? (widget.onAddPressed == null ? null : FloatingActionButton(
                 onPressed:()=> widget.onAddPressed!(),
                 backgroundColor: kPrimaryColor,
                 shape: const CircleBorder(),
                 child: const Icon(Icons.add,color: kWhiteColor, size: 32),
-              ),
-              // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              )),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
             ) ,
           ),
         ));

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:rename_me/utils/common_code.dart';
 
 
 class ViewAttendanceRecordsScreenController extends GetxController{
@@ -56,7 +57,7 @@ class ViewAttendanceRecordsScreenController extends GetxController{
 
     } catch (e) {
       debugPrint('Error loading attendance records: $e');
-      Get.snackbar('Error', 'Failed to load attendance records');
+      CommonCode().showToast(message: 'Failed to load attendance records');
     } finally {
       isLoading.value = false;
     }
@@ -144,16 +145,16 @@ class ViewAttendanceRecordsScreenController extends GetxController{
       // Update statistics
       _updateStatistics();
 
-      Get.snackbar('Success', 'Attendance record deleted');
+      CommonCode().showToast(message: 'Attendance record deleted');
     } catch (e) {
       debugPrint('Error deleting record: $e');
-      Get.snackbar('Error', 'Failed to delete record');
+      CommonCode().showToast(message: 'Failed to delete record');
     }
   }
 
   Future<void> exportRecords() async {
     // Implement export functionality (CSV, PDF, etc.)
-    Get.snackbar('Info', 'Export functionality coming soon');
+    CommonCode().showToast(message: 'Export functionality coming soon');
   }
 
   Future<void> clearAllRecords() async {
@@ -183,10 +184,10 @@ class ViewAttendanceRecordsScreenController extends GetxController{
         filteredRecords.clear();
         _updateStatistics();
 
-        Get.snackbar('Success', 'All records cleared');
+        CommonCode().showToast(message: 'All records cleared');
       } catch (e) {
         debugPrint('Error clearing records: $e');
-        Get.snackbar('Error', 'Failed to clear records');
+        CommonCode().showToast(message: 'Failed to clear records');
       }
     }
   }

@@ -10,6 +10,8 @@ import 'package:hive/hive.dart';
 import 'package:image/image.dart' as img;
 import 'package:rename_me/utils/common_code.dart';
 
+import '../../services/firebase_services/firestore_service.dart';
+
 class RegisterNewUserScreenController extends GetxController {
   late CameraController cameraController;
   late FaceDetector faceDetector;
@@ -196,6 +198,9 @@ class RegisterNewUserScreenController extends GetxController {
       }
 
       await box.put(nameController.text, capturedFace.value);
+
+      //adding
+      await FirestoreService.instance.addUser(name: nameController.text,imageBytes:  capturedFace.value!,);
 
       CommonCode().showToast(
         message: "${nameController.text} registered successfully",

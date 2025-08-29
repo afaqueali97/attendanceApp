@@ -15,7 +15,7 @@ class LoginScreenController extends GetxController{
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  TextFieldManager usernameTFMController = TextFieldManager('',hint:'Enter Email' ,filter: TextFilter.email );
+  TextFieldManager usernameTFMController = TextFieldManager('',hint:'Enter username' ,filter: TextFilter.email );
   TextFieldManager passwordTFMController = TextFieldManager('Password',hint: 'Enter Password');
   RxBool rememberMe = false.obs,obscurePassword = true.obs;
 

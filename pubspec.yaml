@@ -69,7 +69,14 @@ dependencies:
 #  cunning_document_scanner: ^1.1.2
   image: ^3.0.2
 
-#  google_ml_kit: ^0.16.2
+  change_app_package_name: ^1.5.0
+  cloud_firestore: ^4.9.1
+  firebase_core: ^2.15.1
+  firebase_storage: ^11.2.1
+  firebase_auth: ^4.7.1
+  google_sign_in: ^6.2.2
+
+  #  google_ml_kit: ^0.16.2
 #  google_mlkit_face_detection: ^0.13.1
   google_mlkit_face_detection: ^0.10.0
   google_mlkit_commons: ^0.7.1
@@ -87,6 +94,7 @@ dependencies:
 #  tflite_flutter_helper_plus: ^0.0.2
 #  flutter_face_api: ^4.1.1
   flutter_face_api: ^5.1.0
+  shared_preferences: ^2.3.3
 
 
 dev_dependencies:

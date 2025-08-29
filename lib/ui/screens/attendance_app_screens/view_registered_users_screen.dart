@@ -13,10 +13,16 @@ class ViewRegisteredUsersScreen extends GetView<ViewRegisteredUsersScreenControl
     return CustomScaffold(
       key: const Key("scanResultWidget"),
       className: runtimeType.toString(),
-      screenName: 'Scan Face',
+      screenName: 'Registered Users',
       onWillPop: controller.onBackPressed,
       onBackButtonPressed: controller.onBackPressed,
       scaffoldKey: controller.scaffoldKey,
+      floatingActionButton: Obx(() => FloatingActionButton(
+        onPressed: controller.isSyncing.value ? null : () => controller.syncWithFirestore(),
+        child: controller.isSyncing.value
+            ? const CircularProgressIndicator(color: Colors.white)
+            : const Icon(Icons.cloud_sync),
+      )),
       body: _getBody(),
     );
   }
@@ -32,19 +38,27 @@ class ViewRegisteredUsersScreen extends GetView<ViewRegisteredUsersScreenControl
           );
         }
 
-        return GridView.builder(
-          padding: const EdgeInsets.all(16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 3,
-            mainAxisSpacing: 3,
-            childAspectRatio: 0.8,
-          ),
-          itemCount: controller.users.length,
-          itemBuilder: (context, index) {
-            final user = controller.users[index];
-            return _buildUserCard(user.key, user.value);
-          },
+        return Stack(
+          children: [
+            GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 3,
+                mainAxisSpacing: 3,
+                childAspectRatio: 0.8,
+              ),
+              itemCount: controller.users.length,
+              itemBuilder: (context, index) {
+                final user = controller.users[index];
+                return _buildUserCard(user.key, user.value);
+              },
+            ),
+            if (controller.isSyncing.value)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
         );
       }),
     );
@@ -82,6 +96,15 @@ class ViewRegisteredUsersScreen extends GetView<ViewRegisteredUsersScreenControl
                     ),
                   ),
                 ),
+                // Cloud status indicator
+                Obx(() {
+                  final hasCloudImage = controller.cloudImages.containsKey(name);
+                  return Icon(
+                    hasCloudImage ? Icons.cloud_done : Icons.cloud_off,
+                    color: hasCloudImage ? Colors.green : Colors.grey,
+                    size: 20,
+                  );
+                }),
                 IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () => _showDeleteDialog(name),
@@ -98,7 +121,7 @@ class ViewRegisteredUsersScreen extends GetView<ViewRegisteredUsersScreenControl
     Get.dialog(
       AlertDialog(
         title: const Text('Delete User'),
-        content: Text('Are you sure you want to delete $name?'),
+        content: Text('Are you sure you want to delete $name? This will remove them from both local and cloud storage.'),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
